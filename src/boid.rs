@@ -56,9 +56,9 @@ impl Boid {
 
         let tip = self.position + local_forward * LENGTH * 0.5 * self.size;
         let left =
-            self.position + (-local_forward * LENGTH * 0.5 + local_right * WIDTH * 0.5) * self.size;
-        let right: Vec3 =
             self.position + (-local_forward * LENGTH * 0.5 - local_right * WIDTH * 0.5) * self.size;
+        let right: Vec3 =
+            self.position + (-local_forward * LENGTH * 0.5 + local_right * WIDTH * 0.5) * self.size;
         let up: Vec3 =
             self.position + (-local_forward * LENGTH * 0.5 + local_up * HEIGHT * 0.5) * self.size;
         let down: Vec3 =
