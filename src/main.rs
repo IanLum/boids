@@ -1,7 +1,9 @@
 use macroquad::prelude::*;
 mod boid;
+mod constants;
 
 use boid::Boid;
+use constants::*;
 
 fn window_conf() -> Conf {
     Conf {
@@ -14,21 +16,43 @@ fn window_conf() -> Conf {
 
 fn draw_world() {
     clear_background(Color::from_rgba(16, 24, 32, 255));
-    draw_grid(40, 1.0, GRAY, DARKGRAY);
+    draw_grid_ex(
+        40,
+        1.0,
+        GRAY,
+        DARKGRAY,
+        vec3(0.0, -BOUNDS_Y * 0.5, 0.0),
+        Quat::IDENTITY,
+    );
     // Visual reference center.
-    draw_cube_wires(vec3(0.0, 6.0, 0.0), vec3(22.0, 12.0, 22.0), LIGHTGRAY);
+    draw_cube_wires(
+        vec3(0.0, 0.0, 0.0),
+        vec3(BOUNDS_X, BOUNDS_Y, BOUNDS_Z),
+        LIGHTGRAY,
+    );
 }
 
 #[macroquad::main(window_conf)]
 async fn main() {
     let camera = Camera3D {
-        position: vec3(24.0, 18.0, 24.0),
-        target: vec3(0.0, 6.0, 0.0),
+        position: vec3(24.0, 10.0, 24.0),
+        target: vec3(0.0, -3.0, 0.0),
         up: vec3(0.0, 1.0, 0.0),
         ..Default::default()
     };
 
-    let mut boid = Boid::new(3.0, SKYBLUE);
+    let mut boid = Boid::new(
+        Vec3::ZERO,
+        vec3(
+            rand::gen_range(-1.0, 1.0),
+            rand::gen_range(-1.0, 1.0),
+            rand::gen_range(-1.0, 1.0),
+        )
+        .normalize()
+            * INIT_SPEED,
+        1.0,
+        SKYBLUE,
+    );
     let mut sim_time = 0.0;
 
     loop {
@@ -39,7 +63,7 @@ async fn main() {
 
         draw_world();
 
-        boid.update(dt, sim_time);
+        boid.update(dt);
         boid.draw();
 
         set_default_camera();
