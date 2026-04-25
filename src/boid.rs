@@ -65,12 +65,16 @@ impl Boid {
         }
     }
 
+    fn is_self(&self, other: &Boid) -> bool {
+        self.position.distance_squared(other.position) < 1e-6
+    }
+
     fn cohesion(&self, boids: &[Boid]) -> Vec3 {
         let mut center = Vec3::ZERO;
         let mut num_neighbors = 0;
 
         for other in boids {
-            if std::ptr::eq(self, other) {
+            if self.is_self(other) {
                 continue;
             }
             if (other.position - self.position).length_squared() < ATTRACTION_RANGE.powi(2) {
@@ -88,10 +92,39 @@ impl Boid {
     }
 
     fn seperation(&self, boids: &[Boid]) -> Vec3 {
-        return Vec3::ZERO;
+        let mut force = Vec3::ZERO;
+
+        for other in boids {
+            if self.is_self(other) {
+                continue;
+            }
+
+            if (other.position - self.position).length_squared() < SEPERATION_RANGE.powi(2) {
+                force += (self.position - other.position) * SEPERATION_FORCE;
+            }
+        }
+        return force;
     }
 
     fn alignment(&self, boids: &[Boid]) -> Vec3 {
+        let mut avg_velocity = Vec3::ZERO;
+        let mut num_neighbors = 0;
+
+        for other in boids {
+            if self.is_self(other) {
+                continue;
+            }
+            if (self.position - other.position).length_squared() < ATTRACTION_RANGE.powi(2) {
+                avg_velocity += other.velocity;
+                num_neighbors += 1;
+            }
+        }
+
+        if num_neighbors > 0 {
+            avg_velocity /= num_neighbors as f32;
+            return (avg_velocity - self.velocity) * ALIGNMENT_FORCE;
+        }
+
         return Vec3::ZERO;
     }
 
