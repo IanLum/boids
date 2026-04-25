@@ -65,6 +65,8 @@ async fn main() {
     };
 
     let mut boids = init_boids();
+    let mut boids_prior: Vec<Boid> = vec![];
+
     let mut sim_time = 0.0;
 
     loop {
@@ -75,8 +77,9 @@ async fn main() {
 
         draw_world();
 
+        boids_prior.clone_from(&boids);
         for boid in &mut boids {
-            boid.update(dt);
+            boid.update(&boids_prior, dt);
             boid.draw();
         }
 

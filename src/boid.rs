@@ -1,6 +1,6 @@
 use crate::constants::*;
 use macroquad::prelude::*;
-
+#[derive(Clone)]
 pub struct Boid {
     position: Vec3,
     velocity: Vec3,
@@ -18,11 +18,12 @@ impl Boid {
         }
     }
 
-    pub fn update(&mut self, dt: f32) {
-        self.velocity += self.cohesion() * dt;
-        self.velocity += self.seperation() * dt;
-        self.velocity += self.alignment() * dt;
+    pub fn update(&mut self, boids: &[Boid], dt: f32) {
+        self.velocity += self.cohesion(&boids) * dt;
+        self.velocity += self.seperation(&boids) * dt;
+        self.velocity += self.alignment(&boids) * dt;
         self.velocity += self.avoid_borders() * dt;
+        self.cap_speed();
 
         self.position += self.velocity * dt;
     }
@@ -56,20 +57,41 @@ impl Boid {
         };
 
         draw_mesh(&boid_mesh);
-        draw_line_3d(tip, left, BLACK);
-        draw_line_3d(left, right, BLACK);
-        draw_line_3d(right, tip, BLACK);
     }
 
-    fn cohesion(&self) -> Vec3 {
+    fn cap_speed(&mut self) {
+        if self.velocity.length_squared() > MAX_SPEED.powi(2) {
+            self.velocity = self.velocity.normalize() * MAX_SPEED;
+        }
+    }
+
+    fn cohesion(&self, boids: &[Boid]) -> Vec3 {
+        let mut center = Vec3::ZERO;
+        let mut num_neighbors = 0;
+
+        for other in boids {
+            if std::ptr::eq(self, other) {
+                continue;
+            }
+            if (other.position - self.position).length_squared() < ATTRACTION_RANGE.powi(2) {
+                center += other.position;
+                num_neighbors += 1;
+            }
+        }
+
+        if num_neighbors > 0 {
+            center /= num_neighbors as f32;
+            return (center - self.position) * COHESION_FORCE;
+        }
+
         return Vec3::ZERO;
     }
 
-    fn seperation(&self) -> Vec3 {
+    fn seperation(&self, boids: &[Boid]) -> Vec3 {
         return Vec3::ZERO;
     }
 
-    fn alignment(&self) -> Vec3 {
+    fn alignment(&self, boids: &[Boid]) -> Vec3 {
         return Vec3::ZERO;
     }
 

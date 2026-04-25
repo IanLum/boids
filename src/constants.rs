@@ -1,9 +1,14 @@
 // ==== INITIALIZATION PARAMS ====
-pub const NUM_BOIDS: usize = 10;
+pub const NUM_BOIDS: usize = 50;
 pub const INIT_SPEED: f32 = 5.0;
 
+//
+pub const MAX_SPEED: f32 = 24.0;
+pub const ATTRACTION_RANGE: f32 = 16.0;
+
 // ==== FORCE PARAMS ====
-pub const BORDER_FORCE: f32 = 10.0;
+pub const BORDER_FORCE: f32 = 20.0;
+pub const COHESION_FORCE: f32 = 10.0;
 
 // ==== SIMULATION BOUNDS ====
 // Defines an X by Y by Z box centered at the world origin
