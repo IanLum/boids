@@ -1,4 +1,5 @@
 // ==== INITIALIZATION PARAMS ====
+pub const NUM_BOIDS: usize = 10;
 pub const INIT_SPEED: f32 = 5.0;
 
 // ==== FORCE PARAMS ====

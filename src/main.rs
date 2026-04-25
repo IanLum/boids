@@ -14,6 +14,29 @@ fn window_conf() -> Conf {
     }
 }
 
+fn init_boids() -> Vec<Boid> {
+    (0..NUM_BOIDS)
+        .map(|_| {
+            Boid::new(
+                vec3(
+                    rand::gen_range(-BOUNDS_X * 0.5, BOUNDS_X * 0.5),
+                    rand::gen_range(-BOUNDS_Y * 0.5, BOUNDS_Y * 0.5),
+                    rand::gen_range(-BOUNDS_Z * 0.5, BOUNDS_Z * 0.5),
+                ),
+                vec3(
+                    rand::gen_range(-1.0, 1.0),
+                    rand::gen_range(-1.0, 1.0),
+                    rand::gen_range(-1.0, 1.0),
+                )
+                .normalize()
+                    * INIT_SPEED,
+                1.0,
+                SKYBLUE,
+            )
+        })
+        .collect()
+}
+
 fn draw_world() {
     clear_background(Color::from_rgba(16, 24, 32, 255));
     draw_grid_ex(
@@ -41,18 +64,7 @@ async fn main() {
         ..Default::default()
     };
 
-    let mut boid = Boid::new(
-        Vec3::ZERO,
-        vec3(
-            rand::gen_range(-1.0, 1.0),
-            rand::gen_range(-1.0, 1.0),
-            rand::gen_range(-1.0, 1.0),
-        )
-        .normalize()
-            * INIT_SPEED,
-        1.0,
-        SKYBLUE,
-    );
+    let mut boids = init_boids();
     let mut sim_time = 0.0;
 
     loop {
@@ -63,8 +75,10 @@ async fn main() {
 
         draw_world();
 
-        boid.update(dt);
-        boid.draw();
+        for boid in &mut boids {
+            boid.update(dt);
+            boid.draw();
+        }
 
         set_default_camera();
 
