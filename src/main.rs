@@ -30,7 +30,7 @@ fn init_boids() -> Vec<Boid> {
                 )
                 .normalize()
                     * INIT_SPEED,
-                1.0,
+                BOID_SIZE,
                 SKYBLUE,
             )
         })
@@ -70,6 +70,7 @@ async fn main() {
     let mut sim_time = 0.0;
 
     loop {
+        // println!("==============");
         let dt = get_frame_time();
         sim_time += dt;
 

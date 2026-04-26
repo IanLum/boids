@@ -19,11 +19,23 @@ impl Boid {
     }
 
     pub fn update(&mut self, boids: &[Boid], dt: f32) {
-        self.velocity += self.cohesion(&boids) * dt;
-        self.velocity += self.seperation(&boids) * dt;
-        self.velocity += self.alignment(&boids) * dt;
+        let cohesion = self.cohesion(&boids) * dt;
+        let seperation = self.seperation(&boids) * dt;
+        let alignment = self.alignment(&boids) * dt;
+
+        self.velocity += cohesion;
+        self.velocity += seperation;
+        self.velocity += alignment;
         self.velocity += self.avoid_borders() * dt;
         self.cap_speed();
+
+        println!(
+            "cohesion: {:<10.2} seperation: {:<10.2} alignment: {:<10.2} velocity: {:<10.2}",
+            cohesion.length(),
+            seperation.length(),
+            alignment.length(),
+            self.velocity.length()
+        );
 
         self.position += self.velocity * dt;
     }
@@ -119,7 +131,6 @@ impl Boid {
                 num_neighbors += 1;
             }
         }
-
         if num_neighbors > 0 {
             avg_velocity /= num_neighbors as f32;
             return (avg_velocity - self.velocity) * ALIGNMENT_FORCE;
