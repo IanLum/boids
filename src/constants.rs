@@ -1,15 +1,16 @@
 // ==== INITIALIZATION PARAMS ====
-pub const NUM_BOIDS: usize = 50;
-pub const INIT_SPEED: f32 = 10.0;
+pub const NUM_BOIDS: usize = 250;
+pub const INIT_SPEED: f32 = 5.0;
 
 //
-pub const MAX_SPEED: f32 = 24.0;
-pub const ATTRACTION_RANGE: f32 = 4.0;
+pub const MIN_SPEED: f32 = 8.0;
+pub const MAX_SPEED: f32 = 16.0;
+pub const ATTRACTION_RANGE: f32 = 6.0;
 pub const SEPERATION_RANGE: f32 = ATTRACTION_RANGE / 4.0;
 
 // ==== FORCE PARAMS ====
-pub const BORDER_FORCE: f32 = 200.0;
-pub const COHESION_FORCE: f32 = 1.0;
+pub const BORDER_FORCE: f32 = 20.0;
+pub const COHESION_FORCE: f32 = 0.7;
 pub const SEPERATION_FORCE: f32 = 1.0;
 pub const ALIGNMENT_FORCE: f32 = 0.5;
 

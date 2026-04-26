@@ -27,15 +27,15 @@ impl Boid {
         self.velocity += seperation;
         self.velocity += alignment;
         self.velocity += self.avoid_borders() * dt;
-        self.cap_speed();
+        self.clamp_speed();
 
-        println!(
-            "cohesion: {:<10.2} seperation: {:<10.2} alignment: {:<10.2} velocity: {:<10.2}",
-            cohesion.length(),
-            seperation.length(),
-            alignment.length(),
-            self.velocity.length()
-        );
+        // println!(
+        //     "cohesion: {:<10.2} seperation: {:<10.2} alignment: {:<10.2} velocity: {:<10.2}",
+        //     cohesion.length(),
+        //     seperation.length(),
+        //     alignment.length(),
+        //     self.velocity.length()
+        // );
 
         self.position += self.velocity * dt;
     }
@@ -71,9 +71,12 @@ impl Boid {
         draw_mesh(&boid_mesh);
     }
 
-    fn cap_speed(&mut self) {
+    fn clamp_speed(&mut self) {
         if self.velocity.length_squared() > MAX_SPEED.powi(2) {
             self.velocity = self.velocity.normalize() * MAX_SPEED;
+        }
+        if self.velocity.length_squared() < MIN_SPEED.powi(2) {
+            self.velocity = self.velocity.normalize() * MIN_SPEED;
         }
     }
 
@@ -111,11 +114,14 @@ impl Boid {
                 continue;
             }
 
-            if (other.position - self.position).length_squared() < SEPERATION_RANGE.powi(2) {
-                force += (self.position - other.position) * SEPERATION_FORCE;
+            let diff = self.position - other.position;
+            let dist_sq = diff.length_squared();
+
+            if dist_sq < SEPERATION_RANGE.powi(2) && dist_sq > 0.0001 {
+                force += diff / dist_sq; // inverse-square: stronger when closer
             }
         }
-        return force;
+        force * SEPERATION_FORCE
     }
 
     fn alignment(&self, boids: &[Boid]) -> Vec3 {

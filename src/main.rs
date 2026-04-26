@@ -70,7 +70,6 @@ async fn main() {
     let mut sim_time = 0.0;
 
     loop {
-        // println!("==============");
         let dt = get_frame_time();
         sim_time += dt;
 
