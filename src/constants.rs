@@ -16,9 +16,9 @@ pub const ALIGNMENT_FORCE: f32 = 0.5;
 
 // ==== SIMULATION BOUNDS ====
 // Defines an X by Y by Z box centered at the world origin
-pub const BOUNDS_X: f32 = 22.0;
+pub const BOUNDS_X: f32 = 26.0;
 pub const BOUNDS_Y: f32 = 16.0;
-pub const BOUNDS_Z: f32 = 22.0;
+pub const BOUNDS_Z: f32 = BOUNDS_X;
 
 // ==== BOID MESH SIZE ====
 pub const BOID_SIZE: f32 = 0.5;
