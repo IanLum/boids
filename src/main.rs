@@ -58,7 +58,7 @@ fn draw_world() {
 #[macroquad::main(window_conf)]
 async fn main() {
     let camera = Camera3D {
-        position: vec3(30.0, -6.0, 0.0),
+        position: vec3(30.0, -8.0, 0.0),
         target: vec3(0.0, 0.0, 0.0),
         up: vec3(0.0, 1.0, 0.0),
         ..Default::default()
