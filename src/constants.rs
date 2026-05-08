@@ -9,7 +9,7 @@ pub const ATTRACTION_RANGE: f32 = 6.0;
 pub const SEPERATION_RANGE: f32 = ATTRACTION_RANGE / 4.0;
 
 // ==== FORCE PARAMS ====
-pub const BORDER_FORCE: f32 = 20.0;
+pub const BORDER_FORCE: f32 = 16.0;
 pub const COHESION_FORCE: f32 = 0.8;
 pub const SEPERATION_FORCE: f32 = 0.7;
 pub const ALIGNMENT_FORCE: f32 = 0.4;
